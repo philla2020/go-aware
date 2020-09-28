@@ -8,6 +8,103 @@ description: >
 
 This chapter show the basic knowldge to have to work comfortably with Golang.
 
+## Structure of a Go application
+
+In Go any program is composed by one or many files that end with '*.go'. Every file has a `package` declaration on top it.
+The elements are:
+- **package** declaration
+- import declaration
+- declaration of types, variables, constant and functions (order doesn't matter)
+
+An example of a Go application:
+```golang
+package main
+
+import "fmt"
+
+type BaseType struct {
+	Name    string
+	Surname string
+	Age     int
+}
+
+func (b *BaseType) Greetings() {
+	fmt.Println("Hello from BaseType!")
+	(*b).Name = "test"
+}
+
+/*
+Specific type contains the BaseType struct
+*/
+type SpecificType struct {
+	*BaseType // using a pointer is better for performance reason
+	Type      string
+}
+
+func createSpecificType() {
+	// new SpecificType using literal
+	st1 := SpecificType{
+		Type:     "Type of spec type",
+	}
+	st1.Greetings()
+}
+```
+In this example we have in order: package declaration, import declaration, types and functions.
+
+***A Go application might have one or more packages***. A single package could be one file or more file that at the beginning start all with the same package declaration. See how to use your own package later on in the documentation.
+
+### Variables scope
+
+Inside a Go program the variables or constants have visibility at:
+
+- `package level`: each variable or constant define into a package is visibile inside the files belong to that package and from external package if the name is with a capital letter.
+- `function level`: variables are visible inside the scope of the function. There are some exceptions but are more advanced concepts, for now focuse on this principle.
+
+## Variables
+
+In Go a variable can be declared in various way. It can be declared and then assigned or both at the same time.
+Take a look at some examples.
+
+### Long variable declaration
+
+Using the *var* keyword with this syntax:
+
+**var** name ***type*** = ***value*** ==> type and value can be omitted but not both, it means that:
+- if you omit type the type of the variable is set by the value
+- if you omit the value the variable is initialized with the ***ZERO*** value that is:
+  - 0 for numbers, false for booleans, "" for string, and **nil** for interfaces and reference types (slice, pointer, map, channel, function). Therefore in Go there is no such thing as uninitialized variables.
+
+Here some basic usage:
+```go
+// explicit assignment
+var (
+  name1     string
+  age1      int
+)
+name1, age1 = "test", 1
+fmt.Println("variables are:", name1, age1)
+
+// declaration of multiple variables
+var a,b,c int
+println("variables a,b,c, are:", a,b,c)
+
+// Variable can also be declared one by one
+var one string
+var second int
+var third bool = false
+one, second = "hello", 100
+fmt.Println("variables are:", one, second, third)
+```
+### Short variable declaration
+
+In this example name and location are implicit infered as string by Go:
+
+```go
+name, location := "Prince Oberyn", "Dorne" // implicit string
+test := 100 // implicit int
+```
+**`IMPORTANT`**: implicit declaration cannot be use at the package level.
+
 ## Types
 
 This is the list of the supported types in Golang.
