@@ -58,7 +58,7 @@ In this example we have in order: package declaration, import declaration, types
 Inside a Go program the variables or constants have visibility at:
 
 - `package level`: each variable or constant define into a package is visibile inside the files belong to that package and from external package if the name is with a capital letter.
-- `function level`: variables are visible inside the scope of the function. There are some exceptions but are more advanced concepts, for now focuse on this principle.
+- `function level`: variables are visible inside the scope of the function. There are some exceptions but are more advanced concepts, for now focus on this principle.
 
 ## Variables
 
@@ -104,6 +104,9 @@ name, location := "Prince Oberyn", "Dorne" // implicit string
 test := 100 // implicit int
 ```
 **`IMPORTANT`**: implicit declaration cannot be use at the package level.
+
+### Assignment
+TODO: 2.4.1
 
 ## Types
 
