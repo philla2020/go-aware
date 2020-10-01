@@ -106,7 +106,43 @@ test := 100 // implicit int
 **`IMPORTANT`**: implicit declaration cannot be use at the package level.
 
 ### Assignment
-TODO: 2.4.1
+
+Simple assignment in Go comes with the form `var = value`. You can also have:
+
+```go
+// declaration and assignemnt
+i := 1
+
+// increment by one
+i++
+// decrement by one
+i--
+// short form to increment by x
+i += 5
+// it is the same as
+i = i + 5
+```
+
+Another particular form of assignment is the ***Tuple assignment***. This assignemnt is useful to swap value of the variable:
+```
+a, b = b, a
+```
+
+a common use of this assignment is when we invoke a function that returns back more than one value:
+
+```
+err, val := someFunc(x)
+```
+
+if we do not want to evaluate some variables we can use the *blank identifier* instead:
+```
+_, val := someFunc(x) // ignore error
+```
+
+{{< alert title="Tip" color="success" >}}
+To assign a value the variable and the value must have the same type, or better the assignment is valid only if a specific value is ***assignable*** to a specific type.
+{{< /alert >}}
+
 
 ## Types
 
@@ -178,3 +214,30 @@ if err != nil {
 ```
 **mysqlerr** variable can get the value in case of type mysql.MySQLError. In such case ok will be true and, if true, the code will evaluate
 its value equals to 1062 printing the corresponding message "We got a MySQL duplicate :(". In this example there is a check, assignment and if into the same row.
+
+### Type declaration
+
+It means to create a specific type that has the same type of the underlying one. This is useful to better represent a variable whene the Go type could be not so specific. For example `int` type can be used for meters, miles, age etc...
+
+The way to define a specific type is:
+
+*type* **\<name\>** **\<underlying-type\>**
+
+Let's see an example:
+```go
+package main
+
+import (
+	"fmt"
+)
+
+type Meters float64
+type Miles float64
+
+func main() {
+	var a Meters = 1000
+	var b Miles = Miles(a) * Miles(0.621371)
+	fmt.Println("a, b are:", a, b)
+}
+```
+
