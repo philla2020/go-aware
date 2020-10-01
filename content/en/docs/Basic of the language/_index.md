@@ -17,7 +17,7 @@ The elements are:
 - declaration of types, variables, constant and functions (order doesn't matter)
 
 An example of a Go application:
-```golang
+```go
 package main
 
 import "fmt"
@@ -51,7 +51,11 @@ func createSpecificType() {
 ```
 In this example we have in order: package declaration, import declaration, types and functions.
 
-***A Go application might have one or more packages***. A single package could be one file or more file that at the beginning start all with the same package declaration. See how to use your own package later on in the documentation.
+***A Go application might have one or more packages***. A single package could be one file or more file that at the beginning start
+all with the same package declaration. See how to use your own package later on in the documentation.
+
+### Packages, what are and how to use
+TODO: packages explanation
 
 ### Variables scope
 
@@ -215,7 +219,7 @@ if err != nil {
 **mysqlerr** variable can get the value in case of type mysql.MySQLError. In such case ok will be true and, if true, the code will evaluate
 its value equals to 1062 printing the corresponding message "We got a MySQL duplicate :(". In this example there is a check, assignment and if into the same row.
 
-### Type declaration
+### Create your own type
 
 It means to create a specific type that has the same type of the underlying one. This is useful to better represent a variable whene the Go type could be not so specific. For example `int` type can be used for meters, miles, age etc...
 
@@ -241,3 +245,19 @@ func main() {
 }
 ```
 
+{{< alert title="Tip" color="success" >}}
+A type conversion is possible if the two types have the same underlying value or are both pointers to the same object. In case you convert between
+different types Go could make a truncation of the value or a copy of them (string => byte slice). For instance:
+```go
+var b Miles = Miles(a) * Miles(0.621371)
+var c int = int(b) // value will be 621
+```
+Remember that in any case will be an error at runtime.
+{{< /alert >}}
+Two different variables can be compared if belong to the same type or can be compared with an underlying type. A comparison 
+between two different type will fail at compilation time. For instance:
+```go
+fmt.Println("a == 0", a == 0)
+fmt.Println("a > 0", a > 0)
+fmt.Println("a == b (Meter == Miles)", a == b) // will not build
+```
