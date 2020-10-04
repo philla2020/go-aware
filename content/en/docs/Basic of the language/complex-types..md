@@ -7,6 +7,10 @@ description: >
 
 Explanation of the page.
 
+## Arrays [TODO]
+
+## Slices [TODO]
+
 ## Struct
 
 It is simply a collection of fields/properties.
@@ -184,3 +188,14 @@ st1 := SpecificType{
 ```
 For major information related to the use of Pointers take a look [here](../pointers/)
 {{% /alert %}}
+
+
+
+
+
+
+
+## Maps [TODO]
+
+## JSON [TODO]
+

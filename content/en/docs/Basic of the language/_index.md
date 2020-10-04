@@ -54,15 +54,76 @@ In this example we have in order: package declaration, import declaration, types
 ***A Go application might have one or more packages***. A single package could be one file or more file that at the beginning start
 all with the same package declaration. See how to use your own package later on in the documentation.
 
-### Packages, what are and how to use
-TODO: packages explanation
+### Packages, what they are and how to use
 
-### Variables scope
+Some key point to better understand packages:
 
-Inside a Go program the variables or constants have visibility at:
+- a package is declared using the corresponding keyword
+- the source code of a package resides in one o more .go files, located all in the same folder
+- usually the name of the package is the name of the folder which is located
+- all the files of the same package can use functions and variables without qualifying them
+- outside the package to use variables or functions we need point to the package (only for variable or function with the first capital letter)
 
-- `package level`: each variable or constant define into a package is visibile inside the files belong to that package and from external package if the name is with a capital letter.
-- `function level`: variables are visible inside the scope of the function. There are some exceptions but are more advanced concepts, for now focus on this principle.
+Ok, try to create a new simple project with this structure:
+```
+├── main.go
+└── pkgtest
+    └── test.go
+```
+The content of the file `main.go` is:
+```golang
+package main
+
+import (
+	"fmt"
+	"pkgtest"
+)
+
+func main(){
+  fmt.Println("Start...")
+  fmt.Println(pkgtest.Version())
+}
+```
+and the content of the file `test.go` is:
+```golang
+package pkgtest
+
+func Version() string {
+	return "1.0.0"
+}
+```
+
+we have a project executable due to the presence of the main func and we have a nested package to use, named *pkgtest*.
+We know that to export something the first letter could be capitalize so we try:
+```
+go run main.go
+```
+but, unfortunately it doesn't work...let's take a look:
+```
+go run main.go 
+main.go:5:2: cannot find package "pkgtest" in any of:
+        /usr/local/Cellar/go/1.14.2_1/libexec/src/pkgtest (from $GOROOT)
+        /Users/andrea/go/src/pkgtest (from $GOPATH)
+```
+Ops...Go is trying to fetch the source of pkgtest for two locations: GOROOT (where go is installed) and GOPATH. Both cases the searched folder is **`src`**.
+
+The Go versions >1.11 solve this issue by the **module** feature but we see later on this, so the only way to get work the project is to
+move it from the current location (wherever it is) to the GOPATH/src folder.
+The folder to move is only pkgtest, the rest of the project can be wherever you want. Therefore, copy the pkgtest into the GOPATH/src directory.
+In this example we move here:
+
+```shell
+/Users/andrea/go/src/pkgtest
+```
+
+Let's try `go run main.go`  and it will work.
+
+#### Packages initialization
+
+If you have more than one file that refer to the same package, they are initialized in the order where are fetched from the compiler (alphabetical order).
+If you need to group some init steps you can use the ***init()*** func that is automatically invoked from Go. The dependencies are initialized first to be sure the corresponding package is ready before using it.
+
+**Main package** is the last to be initialized.
 
 ## Variables
 
@@ -108,6 +169,16 @@ name, location := "Prince Oberyn", "Dorne" // implicit string
 test := 100 // implicit int
 ```
 **`IMPORTANT`**: implicit declaration cannot be use at the package level.
+
+
+
+### Variables scope
+
+Inside a Go program the variables or constants have visibility at:
+
+- `package level`: each variable or constant define into a package is visibile inside the files belong to that package and from external package if the name is with a capital letter.
+- `function level`: variables are visible inside the scope of the function. There are some exceptions but are more advanced concepts, for now focus on this principle.
+- `block level`: for block we refer to statements enclosed by brackets {}. For instance: for loop, if, switch etc... The variable declared into a block lives into it.
 
 ### Assignment
 
@@ -261,3 +332,13 @@ fmt.Println("a == 0", a == 0)
 fmt.Println("a > 0", a > 0)
 fmt.Println("a == b (Meter == Miles)", a == b) // will not build
 ```
+
+### Integers and Float [TODO]
+
+### Complex numbers [TODO]
+
+### Booleans [TODO]
+
+### String [TODO]
+
+### Constants [TODO]
