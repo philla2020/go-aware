@@ -7,7 +7,28 @@ description: >
 
 Explanation of the page.
 
-## Arrays [TODO]
+## Arrays [...]
+
+Arrays are fixed collections of a declared type.
+
+Some key points to remember are:
+
+- are fixed and cannot resize
+- are pointed started from zero to the lenght minus one
+- by default the elements of a new array are initialized to the ZERO values for that type 
+- we can use literals to initialize an array
+- it is possible to **compare only two arrays of the same type and the same length**
+- two arrays are equals if all the elements have the same values
+
+{{% alert title="Important" color="warning" %}}
+Remember that every time you pass an array to a func Go is copying the array into another one, it is time and memory consuming.
+Also in this case you can use **pointers**.
+{{% /alert %}}
+
+This is an example that covers all the topics listed above:
+```golang
+
+```
 
 ## Slices [TODO]
 
