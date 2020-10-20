@@ -81,8 +81,22 @@ The operator **x[i:z]** returns a new slice that goes from i (int index) to z -1
 - another slice
 - an array
 - a pointer to an array
-if i is not present it is 0, if z is not present, it assumes len(x):
+if i is not present it is 0, if z is not present, it assumes len(x)
 
+### Construction of a slice
+Here are typed some ways to create a slice:
+```golang
+var s []int // nil slice
+var s1 = []int{} // empty slice with 0 elemes (not nil)
+s2 := []int{1,2,3} // slice literal
+s3 := make([]int, 10, 20) // slice of 10 len and 20 cap with 10 elems set to int ZERO value
+s4 := new([20]int)[:10] // same as s3
+fmt.Println(s, s1, s2, s3 ,s4)
+```
+Behind the scene, make creates and underlying unnamed array variable and return a slice of it. The array is accessible only throghout
+the slice.
+
+Follow other examples to build slices using [:] syntax:
 ```golang
 months := []string{1: "January", 3: "March", "April", "May", "June", "July"}
 // an example of the slice operator that creates a new slice
@@ -139,27 +153,62 @@ s = []int{}
 fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; false
 ```
 
-> Creation of a slice with **make**
-```golang
-// creation with make (create a variable with all the elements of ZERO types each one)
-b := make([]int, 10, 20)
-fmt.Println(b) // => [0 0 0 0 0 0 0 0 0 0]
+### Copy a slice
+To copy a slice into another slice use the **copy** function:
 ```
-Behind the scene, make creates and underlying unnamed array variable and return a slice of it. The array is accessible only throghout
-the slice.
+func copy(dst, src []Type) int
+```
+the number of elements copied is the min len of dst or src, for example:
+```golang
+var s3 = make([]int, 2)
+s2 := []int{1, 2, 3, 5, 6} // slice literal
+n := copy(s3, s2)
+fmt.Printf("number of elements copied is %d, value of dest is: %v\n", n, s3)
+```
+the dest must not be nil, else the copy will not be executed.
 
 ### Append new element
 Use the built-in **append** function:
 ```golang
-
+// Creation of a slice of 5 elements
+i := make([]int, 5, 10)
+fmt.Printf("type is %T, len is %v, cap is a %v\n",i,  len(i), cap(i)) // => 4, 4
+fmt.Println(i) // => len == 5
+i = append(i, 100)
+fmt.Println(i) // len == 6, cap == 10 => [0 0 0 0 0 100]
 ```
 {{< alert color="warning" title="ATTENTION" >}}
 Every time a slice changes its ***cap*** means new allocation and copy, therefore pay attention to the cap and len it's a good
 way to be more efficient.
 {{< /alert >}}
 
+### Iterate a slice
+An example of iteration:
+```golang
+for i, v := range a {
+  fmt.Printf("i: %d, value: %s\n", i, v)
+}
+```
+where *i* is the index and *v* is the value. If you want to omit i or v pass the '_' character.
 
-### [I AM HERE] take a look at the the mark on kindle
+### Delete an element
+How to delete an element from a slice?
+We take the position of the element to delete, move the last value into it and the slice the slice wiping out the last position:
+```golang
+func deleteElement(pos int){
+	fmt.Println("\n---Delete element")
+	s := []int{10,20,30,50,100,90}
+	fmt.Println("before deletion s slice is", s)
+
+	// Remove the element at index i from a.
+	s[pos] = s[len(s)-1] // last element overrides the pos passed
+	s = s[:len(s)-1]   // remove last element
+	fmt.Printf("after deletion s slice is %v (len: %d, cap: %d)\n", s, len(s), cap(s))
+}
+```
+In the github repo there is an example under the slices.go file that shows the slower way to delete an element maintaining the order.
+
+### [I AM HERE]
 
 ## Struct
 
