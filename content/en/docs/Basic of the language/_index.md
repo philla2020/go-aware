@@ -266,7 +266,7 @@ if ok {
   fmt.Println("y is not of the type map[string]interface{}")
 }
 ```
-ok is a boolean that is true if the type corresponds to the type passed. If true z will contain the value of the type, else the zero value for that type.
+ok is a boolean and it is true if the type corresponds to the type passed. If true z will contain the value of the type, else the ***ZERO*** value for that type.
 To assert via **`switch`** take a look here:
 ```golang
 // check a type with switch..case

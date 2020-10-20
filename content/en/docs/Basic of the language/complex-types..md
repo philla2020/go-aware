@@ -7,13 +7,14 @@ description: >
 
 Explanation of the page.
 
-## Arrays [...]
+## Arrays
 
 Arrays are fixed collections of a declared type.
 
 Some key points to remember are:
 
 - are fixed and cannot resize
+- the array elements can be modified
 - are pointed started from zero to the lenght minus one
 - by default the elements of a new array are initialized to the ZERO values for that type 
 - we can use literals to initialize an array
@@ -25,12 +26,140 @@ Remember that every time you pass an array to a func Go is copying the array int
 Also in this case you can use **pointers**.
 {{% /alert %}}
 
-This is an example that covers all the topics listed above:
+This is an example that covers all the topics listed above (printValues is a function that print simply a value):
+
+```golang
+var a [5]string // declaration of an array of 5 elements (init at ZERO values)
+// cycle to get the values
+printValues(a)
+// set first and last value
+a[0] = "first"
+a[len(a) - 1] = "last"
+printValues(a)
+
+// initialization using literals
+var b [5]string = [5]string{"a", "b", "c", "d", "e"}
+//	b[5] = "test" // compile error => out of bounds
+printValues(b)
+
+// initialization using literals (without var) taking the length from the
+// number of elements
+c := [...]string{"a", "b", "c", "d", "e"}
+printValues(c)
+
+// it is possible to compare only two arrays of the same type and the same length
+// two arrays are equals if the elements have the same values
+fmt.Println("b == c", b == c)
+
+// init and implicit declare specifying the size
+i1 := [3]int{1,2,3}
+i2 := [3]int{1,2,4}
+i3 := [4]int{1,2,4,5}
+fmt.Println("i1 == i2", i1 == i2)
+fmt.Println("i3:", i3)
+//	fmt.Println("i1 == i3", i1 == i3) // compile time error, same type but different length
+```
+
+## Slices [...]
+Slices are fixed collections of a declared type.
+
+{{< alert title="Keypoints" color="success" >}}
+- declaration is similar to the array without having to declare the length
+- it has three components a pointer, a length, a capacity
+- is a ligthweigth structure that gives access to the underlying structure that is an array
+- **pointer**: the first element reachable of the array (not necessarily the first)
+- the **length** is the number of slice elements (***len*** function gives it)
+- the **capacity** is the number of elements between the start of the slice and the end of the array (***cap*** function gives it)
+- multiple slices can refer to the same underlying array
+- you cannot use == operator to test if two slices have the same values, you need to do your own func
+{{< /alert >}}
+Follow an awesome image taken from the book ***Go Programming Language*** that illustrates the len, cap and underlying array:
+
+![](/img/slices.png)
+
+The operator **x[i:z]** returns a new slice that goes from i (int index) to z -1 of a sequence z. What is z?
+- another slice
+- an array
+- a pointer to an array
+if i is not present it is 0, if z is not present, it assumes len(x):
+
+```golang
+months := []string{1: "January", 3: "March", "April", "May", "June", "July"}
+// an example of the slice operator that creates a new slice
+firstMonths := months[0:3] // -> 0,1,2 indexes
+printValues(firstMonths)
+// other slice examples
+allMonths := months[:]
+// from beginning to end
+allMonthsTwo := months[0:]
+// or
+allMonthsThree := months[0:9]
+printValues(allMonths)
+printValues(allMonthsTwo)
+printValues(allMonthsThree)
+```
+
+Knowing the existence of the underlying array we can extend a slice inside the cap of the array, referring to the previous
+example:
+
+```golang
+// to extend a slice always inside the capacity
+fourMonths := firstMonths[:4]
+printValues(fourMonths)
+```
+Slice is a ***reference type*** because it contains a pointer to an array, therefore passing a slice as an argument to a function permits to modify the underlying array. Remember that Go always copy the value but, in this case, it copies a pointer not an entire structure.
+To show this take a look at the following reverse example, as you can notice the argument passed to the function is the original slice i
+that after execution is reversed:
+
+```golang
+// int slice and reverse (Go passes a copy of a pointer of the slice, so the func can change the values)
+i := []int{1,2,3,4,5,6}
+reverse(i)
+fmt.Println(i)
+
+  // Reverse a slice
+func reverse(a []int){
+	for i,j := 0, len(a) - 1; i < j; i,j = i+1, j-1{
+		a[i], a[j] = a[j], a [i]
+	}
+}
+```
+in the above example remember the multiple assingment separated by comma, *i,j := 0, len(a) - 1*, where i is 0 and j is 5.
+
+The **ZERO value** of a slice type is nil:
+```golang
+// nil values
+var s []int
+fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; true
+s = nil
+fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; true
+s = []int(nil)
+fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; true
+s = []int{}
+fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; false
+```
+
+> Creation of a slice with **make**
+```golang
+// creation with make (create a variable with all the elements of ZERO types each one)
+b := make([]int, 10, 20)
+fmt.Println(b) // => [0 0 0 0 0 0 0 0 0 0]
+```
+Behind the scene, make creates and underlying unnamed array variable and return a slice of it. The array is accessible only throghout
+the slice.
+
+### Append new element
+Use the built-in **append** function:
 ```golang
 
 ```
+{{< alert color="warning" title="ATTENTION" >}}
+Every time a slice changes its ***cap*** means new allocation and copy, therefore pay attention to the cap and len it's a good
+way to be more efficient.
+{{< /alert >}}
 
-## Slices [TODO]
+
+### [I AM HERE] take a look at the the mark on kindle
 
 ## Struct
 

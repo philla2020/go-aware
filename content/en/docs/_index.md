@@ -8,6 +8,8 @@ menu:
     weight: 20
 ---
 
+CONTINUE FROM: complex-types => Slices
+
 This guide reports some best practices and how to for Golang. You can take a look at all the examples reported in this guide here:
 - [Golang cookbook](https://github.com/mas2020-golang/cookbook)
 
