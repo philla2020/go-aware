@@ -60,7 +60,7 @@ fmt.Println("i3:", i3)
 //	fmt.Println("i1 == i3", i1 == i3) // compile time error, same type but different length
 ```
 
-## Slices [...]
+## Slices
 Slices are fixed collections of a declared type.
 
 {{< alert title="Keypoints" color="success" >}}
@@ -177,6 +177,7 @@ fmt.Println(i) // => len == 5
 i = append(i, 100)
 fmt.Println(i) // len == 6, cap == 10 => [0 0 0 0 0 100]
 ```
+The second parameter of the append function accepts '...Type'. The ellipsis '...' means that it accepts any number of arguments.
 {{< alert color="warning" title="ATTENTION" >}}
 Every time a slice changes its ***cap*** means new allocation and copy, therefore pay attention to the cap and len it's a good
 way to be more efficient.
@@ -207,6 +208,88 @@ func deleteElement(pos int){
 }
 ```
 In the github repo there is an example under the slices.go file that shows the slower way to delete an element maintaining the order.
+
+## Maps
+It is an **unordered collection** of key/value pairs. Syntax is map[K]V where K is the type of the K, V is the value.
+
+{{< alert title="Keypoints" color="success" >}}
+- ***ZERO value*** for a Map is `nil` (Map address is a reference to an HASH table)
+- lookup, delete, range, len are ***safe*** on a `nil` Map. **Add element** on a `nil` Map causes the panic instead.
+- in Go a map is a reference to an HASH table
+- all the keys of a Map are of the same type; all the values are of the same type. Keys and Values do not necessarily be of the same type
+- cannot take an address from a map element (e.g. &test["xyz"])
+- a map lookup using a key that doesn't exist will not give an error, returns the ZERO value for the value type
+- map ***cannot be compared*** each other (as slices), the only legal comparison is with `nil`
+{{< /alert >}}
+
+Elements inside a map are not ordered, suppose you have a map with keys string and numbers as values, to order you can use your own function:
+```golang
+func sortMap(ages map[string]int)  {
+	var names = make([]string, 0, len(ages)) // slice for the names
+	// append all the names to the slice in a unordered way
+	// we omit the second value in the for loop using only the key of ages and hot the value
+	for key := range ages{
+		names = append(names, key)
+	}
+	// sort slice of names
+	sort.Strings(names)
+	// read ordered names from slices and get the values of ages from the key name
+	for _, name := range names{
+		fmt.Printf("%s\t%d\n", name, ages[name])
+	}
+}
+```
+
+### Create a map
+Some examples on how to create a map:
+```golang
+var testNil map[string]int // ZERO value is nil
+
+// creation with make
+names := make(map[string]int)
+fmt.Printf("names == nil: %v, content is: %v\n", names == nil, names) // => false
+
+  // maps from literals
+ages := map[string]int{
+  "ag": 43,
+  "sm": 29,
+  "mg": 0,
+}
+
+  // another way to create an empty map
+ages2 := map[string]int{}
+fmt.Println("ages2 == nil:", ages2 == nil) // => false
+```
+
+to test if a **key esists** you can type:
+```golang
+// check if a key exists:
+age, ok := names["test"]
+fmt.Printf("names test exists: %v and its value is %v", ok, age)
+```
+this code will save in age the value of the key 'test' if a key exists, else it will store the ZERO value of the element type. `ok` will be true in case a key exists, otherwise false.
+Simply testing a key, without using the previous code, in case the key doesn't exist, returns the ZERO value of the element type, e.g. in case of int 0. Sometimes could be useful, sometimes no, in that case use the check form instead.
+
+### Add new element
+To add elements you can use a not existing key as shown below:
+```golang
+func addElements(m map[string]int) {
+	m["test"] = 100
+	m["zed"] = 90
+	m["jhon"] = 53
+	fmt.Printf("values of m are %v\n", m)
+}
+```
+
+### Remove an element
+To remove an element you can type:
+```golang
+func deleteElements(m map[string]int) {
+	delete(m, "ag")
+	fmt.Printf("values of m are %v\n", m)
+}
+```
+in case we delete an element that doesn't exist no error will thrown.
 
 ### [I AM HERE]
 
