@@ -83,7 +83,7 @@ The operator **x[i:z]** returns a new slice that goes from i (int index) to z -1
 - a pointer to an array
 if i is not present it is 0, if z is not present, it assumes len(x)
 
-### Construction of a slice
+### Init a slice
 Here are typed some ways to create a slice:
 ```golang
 var s []int // nil slice
@@ -210,7 +210,7 @@ func deleteElement(pos int){
 In the github repo there is an example under the slices.go file that shows the slower way to delete an element maintaining the order.
 
 ## Maps
-It is an **unordered collection** of key/value pairs. Syntax is map[K]V where K is the type of the K, V is the value.
+It is an **unordered collection** of key/value pairs. Syntax is map[K]V where K is the type of the K, V is the value. A value could be a simple type or a composite type, like other map or an array.
 
 {{< alert title="Keypoints" color="success" >}}
 - ***ZERO value*** for a Map is `nil` (Map address is a reference to an HASH table)
@@ -240,7 +240,7 @@ func sortMap(ages map[string]int)  {
 }
 ```
 
-### Create a map
+### Init a map
 Some examples on how to create a map:
 ```golang
 var testNil map[string]int // ZERO value is nil
@@ -291,16 +291,20 @@ func deleteElements(m map[string]int) {
 ```
 in case we delete an element that doesn't exist no error will thrown.
 
-### [I AM HERE]
-
-## Struct
+## Struct [I AM HERE]
 
 It is simply a collection of fields/properties.
-In an OOP perspective we can think of a struct to be a light class that supports composition but not inheritance.
+In an OOP perspective we can think of a struct as a light class that supports composition but not inheritance.
 
-{{% alert title="Important" color="warning" %}}
-Outside a package where the Struct is located can be accessed only the capitalized fields.
-{{% /alert %}}
+{{< alert title="Keypoints" color="success" >}}
+- ***ZERO value*** for a Map is the composition of the ***ZERO value*** for its of each fields.
+- an empty struct is considered a struct with *ZERO* fields and is expressed as `struct{}`. To assign it, for example to the following map: `map[string]struct{}` you have to write (supposed map is m): `m["test"] = struct{}{}`.
+- outside the package where the Struct is located, can be accessed only the capitalized fields
+- an instance of a struct is a variable. The *fields of the struct are variables too* and can be accessed, assign to them a value, referenced as pointers.
+- Fields order is significant to the type identity
+- A struct cannot contain a field of the same type of the struct itself, instead it can have a field that is a pointer to the struct type. It could be useful to create a recursive struct.
+- when you pass a complex struct to a func, is more efficient if you pass it as a pointer
+{{< /alert >}}
 
 ### Init a struct
 
@@ -308,7 +312,7 @@ Suppose to have the struct:
 
 ```go
 // Simple struct
-type vehicle struct {
+type Vehicle struct {
   brand      string
   model      string
   horsepower int
@@ -317,16 +321,15 @@ type vehicle struct {
 ```
 
 it can be initialized as:
-
 ```go
 // 1- Using the literal syntax
-fmt.Println(Vehicle{brand: "Fiat",
+Vehicle{brand: "Fiat",
   model:      "Punto",
   horsepower: 90,
-  year:       2002})
+  year:       2002}
  
 // 2- Using the the dot notation
-var v vehicle
+var v Vehicle
 v.brand = "Tesla"
 v.model = "Tesla1"
 v.horsepower = 120
@@ -334,15 +337,39 @@ v.year = 2020
 fmt.Println(v)
  
 // 3- using literal in a particular order omitting the name of the field
-fmt.Println(vehicle{"Fiat", "Giulia", 140, 2018})
+fmt.Println(Vehicle{"Fiat", "Giulia", 140, 2018})
  
 // 4- using the new keyword that creates a pointer to the type initialing the fields
 // with the zero value of the specific type
-fmt.Println(new(vehicle))
+fmt.Println(new(Vehicle))
 // It is similar to
-fmt.Println(&vehicle{})
+fmt.Printf("%#v\n",&Vehicle{})
 ```
 For the moment don't take care at the '&' character in the last row.
+
+### Compare structs
+Remember that if all the fields in a struct are comparable, the structs are comparable.
+For example:
+
+```golang
+func compare()  {
+  v1 := Vehicle{
+    brand:      "Tesla",
+    model:      "V1",
+    horsepower: 125,
+    year:       2018,
+  }
+
+  v2 := Vehicle{
+    brand:      "Tesla",
+    model:      "V2",
+    horsepower: 135,
+    year:       2019,
+  }
+
+  fmt.Printf("v1 == v2 => %t\n", v1 == v2) // => false
+}
+```
 
 ### Add a method to a structure
 
@@ -472,12 +499,6 @@ For major information related to the use of Pointers take a look [here](../point
 {{% /alert %}}
 
 
-
-
-
-
-
-## Maps [TODO]
 
 ## JSON [TODO]
 
