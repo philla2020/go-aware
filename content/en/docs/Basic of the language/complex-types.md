@@ -122,7 +122,7 @@ fourMonths := firstMonths[:4]
 printValues(fourMonths)
 ```
 Slice is a ***reference type*** because it contains a pointer to an array, therefore passing a slice as an argument to a function permits to modify the underlying array. Remember that Go always copy the value but, in this case, it copies a pointer not an entire structure.
-To show this take a look at the following reverse example, as you can notice the argument passed to the function is the original slice i
+To show this take a look at the following reverse example, as you can notice the argument passed to the function is the original slice
 that after execution is reversed:
 
 ```golang
@@ -144,13 +144,13 @@ The **ZERO value** of a slice type is nil:
 ```golang
 // nil values
 var s []int
-fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; true
+fmt.Printf("len(s) is %v, s == nil: %v\n", len(s), s == nil) // len(s) is 0, s == nil: true
 s = nil
-fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; true
+fmt.Printf("len(s) is %v, s == nil: %v\n", len(s), s == nil) // len(s) is 0, s == nil: true
 s = []int(nil)
-fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; true
+fmt.Printf("len(s) is %v, s == nil: %v\n", len(s), s == nil) // len(s) is 0, s == nil: true
 s = []int{}
-fmt.Printf("len(s) is %v, len == nil; %v\n", len(s), s == nil) // len(s) is 0, len == nil; false
+fmt.Printf("len(s) is %v, s == nil: %v\n", len(s), s == nil) // len(s) is 0, s == nil: false
 ```
 
 ### Copy a slice
@@ -172,8 +172,8 @@ Use the built-in **append** function:
 ```golang
 // Creation of a slice of 5 elements
 i := make([]int, 5, 10)
-fmt.Printf("type is %T, len is %v, cap is a %v\n",i,  len(i), cap(i)) // => 4, 4
-fmt.Println(i) // => len == 5
+fmt.Printf("type is %T, len is %v, cap is a %v\n",i,  len(i), cap(i)) // type is []int, len is 5, cap is a 10
+fmt.Println(i) // => [0 0 0 0 0]
 i = append(i, 100)
 fmt.Println(i) // len == 6, cap == 10 => [0 0 0 0 0 100]
 ```
