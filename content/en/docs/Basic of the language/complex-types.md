@@ -291,7 +291,7 @@ func deleteElements(m map[string]int) {
 ```
 in case we delete an element that doesn't exist no error will thrown.
 
-## Struct [I AM HERE]
+## Struct
 
 It is simply a collection of fields/properties.
 In an OOP perspective we can think of a struct as a light class that supports composition but not inheritance.
@@ -399,7 +399,13 @@ fmt.Println(v)
 v.Go()
 ```
 Under the hood, Go will take the v object and passes its instance to the Go() function, so inside the method you can use v object.
-**Remember** that Go will pass the value of the v object, therefore if you change it (for instance changing a value of a field) inside the method, the original object is still unchanged.
+**Remember** that Go will pass the value of the v object, therefore if you change it (for instance changing a value of a field) inside the method, the original object is still unchanged. If you need to do it (or your struct is big and you want to improve the memory usage) you can use a pointer instead:
+```go
+func (v *Vehicle) Go() {
+  fmt.Println("Started!")
+  // change velocity for example...
+}
+```
 
 ### Type composition
 
@@ -500,5 +506,79 @@ For major information related to the use of Pointers take a look [here](../point
 
 
 
-## JSON [TODO]
+## Go Template
+With Go we can use template system: it is a way to substitute at a string some value injected by a template `action`.
+An `action` is a particular expression included in double brackets: `{{ ... }}`.
+With an expression we can:
+- print values, 
+- select struct fields, 
+- call functions and methods,
+- use a control flow such as if-else statements and range
 
+`'.'`: the current value inside an expression is given by the 'dot' character.
+
+`'|'`: this character is similar to le Unix PIPE, it permits to pass a value to another command as we are going to see.
+
+{{< alert title="Building a template" color="success" >}}
+- to use a template first you need to **`parse`** it: only one time operation
+- **`execution`** of a template is the next phase
+{{< /alert >}}
+
+### Simple template
+An example of a simple template is:
+```golang
+var t = `{{- range . -}}
+-------------------------------------
+Brand: {{ .Brand }}
+OS: {{ .OS }}
+Age: {{ .Age }}
+-------------------------------------
+{{ end -}}
+`
+```
+the above Golang backtip string shows:
+- using of the `range` to cycle the elements. Inside a cycle we show values for the property Brand, OS, Age.
+- remember that the 'dot' is the pointer of an execution: range will cycle some cyclable element that we pass to the execution of the template
+  
+A simple struct that maps the template content coud be:
+```golang
+type Computer struct {
+	Brand     string
+	OS        string
+	Age       time.Time
+	Color     string
+	Memory    int
+	Processor string
+}
+```
+Suppose we have this method (code is omitted for brevity) that loads some computers:
+```golang
+computers := fillComputers()
+```
+then write the code to Parse and Execute the template. Execute will put the output into the stdout stream.
+```golang
+c, err := template.New("computers").Parse(t)
+if err != nil {
+  log.Fatal(err)
+}
+if err := c.Execute(os.Stdout, computers); err != nil {
+  log.Fatal(err)
+}
+```
+the output will be:
+```
+╰─$ go run main.go 
+-------------------------------------
+Brand: Apple
+OS: Catalina
+Age: 2016-02-01 00:00:00 +0000 UTC
+-------------------------------------
+-------------------------------------
+Brand: Dell
+OS: Windows 10
+Age: 2018-02-01 00:00:00 +0000 UTC
+-------------------------------------
+```
+That's it for the basics.
+Major information could be find in the official documentation related the text/template pkg [here](https://golang.org/pkg/text/template/).
+A blog post is coming soon too!!
