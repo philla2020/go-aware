@@ -36,3 +36,13 @@ if err := c.Execute(os.Stdout, computers); err != nil {
 }
 ```
 the tecnique above is useful to enrich the message in a chain.
+When a critical error occurred we can exit to the program by two ways:
+- with `os.Exit(1)` (usually the result code for an error is 1 or 2)
+- with `log.Fatalf` to prefix the error with a date a time information
+
+It is possible to redirect error directly to the standard error with:
+```golang
+if err := Ping(); err != nil {
+    fmt.Fprintf(os.Stderr, "ping failed: %v; networking disabled\n", err)
+}
+```

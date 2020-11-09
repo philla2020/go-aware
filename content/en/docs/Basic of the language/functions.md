@@ -212,3 +212,21 @@ http://somegreatsite.com
 http://text2.com
 mailto:support@yourcompany.com
 ```
+
+## Functions as values
+
+Like all the other type, functions have a value, its own value types and can be assigned to a variable:
+```golang
+func example(par1 int, par2 string) int {
+	fmt.Println("the par2 has this value: ", par2)
+	return par1 * 2
+}
+
+// assign function to a variable
+f := example
+// then call it
+fmt.Println("result of f() is:", f(1, "10"))
+```
+- type of a function are parameters and return values
+- value of a function is the body
+- the ***ZERO value*** of a function type is nil.
