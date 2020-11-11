@@ -339,6 +339,164 @@ fmt.Println("a == b (Meter == Miles)", a == b) // will not build
 
 ### Booleans [TODO]
 
-### String [TODO]
+### String [...]
+
+What are the strings in Golang? Are ***immutable*** sequence of bytes. These are interpreted as UTF-8 encoded sequences
+of Unicode.
+*You can consider the strings as a slice of bytes*, where len is the number of bytes that compose a string and the string[i] is the
+single byte.
+
+{{< alert color="warning" title="Warning" >}}The i-th bytes is not necessarily a character due to the UTF-8 encoded interpretation that requires two or more bytes.{{< /alert >}}
+
+The slice or *substring* of a string consists of a new string of this length. Remember that the end of a slice is always length - 1. If **start** and **end** are omitted means the entire string. For example:
+```golang
+s := "Hello Golang Aware!"
+fmt.Println(s[:]) // -> Hello Golang Aware!
+fmt.Println(s[:5]) // -> Hello
+fmt.Println(s[2:5]) // -> llo
+```
+{{< alert title="Keypoints" color="success" >}}
+- string are ***immutable**, this is wrong: `s[0] = 'a'`
+- string ***can be compared*** with == and <; the comparison is done byte by byte
+- ***ZERO value*** for a Map is an empty string
+- it is possible that more strings share the same underlying array (as seen for the slices)
+- to create a string use the double quotes ""
+- building up strings incrementally can be not efficient, use bytes.Buffer in such cases
+{{< /alert >}}
+
+As a special sequence of characters you can use escape chars also:
+- \a  “alert” or bell 
+- \b backspace 
+- \f form feed 
+- \n newline 
+- \r carriage return 
+- \t tab 
+- \v vertical tab 
+- \' single quote (only in the rune literal '\'')
+You can include arbitrary bytes (only 1 byte) using also:
+- hexadecimal escape char \xYY
+- octal escape char \ooo (3 octal digits)
+
+What are the ***raw string literal***? They are string wrapped by \`...\`: content is taken literally and no escape are interpred, obviously it can be multiline.
+Usually are used for:
+- write regular expressions
+- HTML templates
+- JSON literals
+- other long texts
+
+#### Unicode (UTF-32)
+Until Unicode there was ASCII as a standard coding system. ASCII uses 7 bits to represent 128 chars. Then with a variety of the languages
+to represent was born Unicode which collects all of the characters in all of the world’s writing systems.
+{{< alert color="success" >}}
+- each character is assigned to standard number called a *Unicode code point* (**rune** in Go)
+- actually Unicode 8 defines over 120.000 code points (characters)
+- the data type for the *rune* is int32 (UTF-32 representetion). Each unicode point has the size of 32 bits
+- **IMPORTANT**: most characters uses still number fewer than 65.536 which fit in 16 bits
+{{< /alert >}}
+
+#### Unicode (UTF-8)
+
+It's an encoding standard invented by the author of Go Ken Thompson and Robe Pike and consist into schema that count from 1 byte to 4 bytes.
+Some bits of the first byte indicates how many bytes will be used to encode the single character. Therefore you need to take a look at the left foremost byte with these rules:
+
+- if begins with 0 is 1 byte long (codebase <= 127 because you have only 7 bits to represent the code)
+- if begins with 110, the second byte begins with 10 is 2 bytes long (codebase > 127 and <= 2047)
+- if begins with 1110, the second and third byte begin with 10 is 3 bytes long (codebase > 2047 and <= 65535)
+- if begins with 1110, the second, third, fourth byte begin with 10 is 4 bytes long (codebase > 65535 <= 0x10ffff)
+
+This is not so simple to understand at a first look, the wrong thing you could do is to represent the number above as binary ones, for example you know that a character has a code code point of 19990 that is `01001110 00010110`. You could think it is two bytes long in UTF-8, it's wrong, it is three bytes long because some bits positions need to establish the length itself. If you ask Go to give you the exadecimal represention of the character behind 19990 you get:
+```
+s := "世"
+fmt.Printf("% x\n", s) // -> e4 b8 96
+```
+there are three hex digits, so 3 bytes. If you convert each byte in binary representetion you get:
+```
+11100100 10111000 10010110
+```
+you can see that we match with the third casistic. If you separate the bits of the represention you get:
+```
+`1110`0100 `10`111000 `10`010110
+if you cut you get:
+0100 111000 010110
+and if you join together
+01001110 00010110
+you get to bytes that is 19990
+```
+
+The conclusion is that:
+- the code point of the above character is 19990
+- the hex code corresponding to the code point is 4e16
+- the rune has the uint32 value of 19990
+- the hex digit of the character is three bytes long and correspond how the code point is stored with UTF-8 encoding
+Now, I hope it's more clear why when you read some text you need to know the encoding system to interpret correctly the bytes.
+
+Not all characters are simple to write. Unicode escaped in Go allow us to write them: `\uhhhh` for 16-bits and `\uhhhhhh` for 32-bits (h are in exadecimal format). For example:
+```
+"\xe4\xb8\x96\xe7\x95\x8c"
+"\u4e16\u754c"
+"\U00004e16\U0000754c"
+```
+represents the same two characters. Or in rune literals:
+```
+'\u4e16'  '\U00004e16'
+```
+A rune whose value is less than 256 may be written with a single hexadecimal escape, such as '\x41'  for 'A', but for higher values, a \u or \U escape must be used.
+
+```golang
+fmt.Printf("%c\t%d\n", '\uFFFD', '\uFFFD') // -> �, unicode escape into a rune, code point 65533
+fmt.Printf("%c\t%d\n", '\u4e16', '\u4e16') // -> 世, unicode escape into a rune, code point 19990
+fmt.Printf("%s\tlen: %d bytes\n", "\xe4\xb8\x96", len("\xe4\xb8\x96")) // -> 世 bytes: 3, hexadecimal escape, each \xx represents 1 byte
+fmt.Printf("%s\tlen: %d bytes\n", "\u4e16", len("\u4e16") )// -> 世 bytes: 3, unicode escape into a string
+```
+
+Take a look at this example to read a rune:
+```golang
+func decodeRunes()  {
+	s := "◊Hello, ◊Ç∞"
+	fmt.Println("bytes length:",len(s))                    // "18"
+	fmt.Println("rune in string:",utf8.RuneCountInString(s)) // "11"
+
+	// Decoding rune: scan of a string reading the character based on the position due to the size
+	// of the previous char
+	for i := 0; i < len(s); {
+		r, size := utf8.DecodeRuneInString(s[i:])
+		fmt.Printf("%d\t%c\n", i, r)
+		i += size
+	}
+}
+```
+DecodeRuneInString method will give the char and the size in bytes so that we can move to the next basing on the size of the previous one.
+Fortunately exists the range that decodes UTF-8 implicitly:
+```golang
+// decodes implicitly
+for i, r := range s{
+  fmt.Printf("%d\t%q\t%d\n", i, r, r)
+}
+```
+
+#### String conversions
+This paragraph shows some ways of conversions:
+```golang
+s := "This is my string世"
+// convert into a slice of bytes (opposite to string cab be changed)
+b := []byte(s)
+fmt.Printf("bytes len %d\t%v\n", len(b), b) // --> 20, the last char occupies 3 bytes
+fmt.Printf("hex digits % x\n", s)           // --> 20, the last char occupies 3 bytes
+// convert from bytes to string
+s2 := string(b)
+fmt.Printf("original string:\t%s\nconverted string:\t%s\n", s, s2)
+
+// Convert from int to string
+n := 123
+fmt.Printf("str with Sprintf() is %s\n", fmt.Sprintf("%d", n))        // -> 123, string rep of an int
+fmt.Printf("str binary with Sprintf() is %s\n", fmt.Sprintf("%b", n)) // -> 1111011, string rep of an int converted to binary
+fmt.Printf("str with string() is %s\n", string(n))                    // -> {, because convert from int to UTF-8 representation
+fmt.Printf("str with strconv.Itoa() is %s\n", strconv.Itoa(n))        // // -> "123"
+
+// Convert from string to int
+n, _ = strconv.Atoi("123")              // -> conversion using strconv
+m, _ := strconv.ParseInt("123", 10, 16) // -> conversion using ParseInt, return i64 into n
+fmt.Println("n,m", n, m)
+```
 
 ### Constants [TODO]
