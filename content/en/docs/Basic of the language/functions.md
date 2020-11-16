@@ -227,6 +227,10 @@ f := example
 // then call it
 fmt.Println("result of f() is:", f(1, "10"))
 ```
-- type of a function are parameters and return values
+
+- the ***type*** of a function are both parameters and return values in an unique type
 - value of a function is the body
-- the ***ZERO value*** of a function type is nil.
+- the ***ZERO value*** of a function type is nil
+- if assigned to a variable we can assigne a function with the same type (as point 1)
+
+
