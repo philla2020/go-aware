@@ -224,10 +224,12 @@ To assign a value the variable and the value must have the same type, or better 
 This is the list of the supported types in Golang.
 
 Go can manage these types:
+
 - `bool`
 - `string`
 
 Numeric types:
+
 - `uint`        either 32 or 64 bits
 - `int`         same size as uint
 - `uintptr`     an unsigned integer large enough to store the uninterpreted bits of
@@ -246,7 +248,7 @@ Numeric types:
 - `complex64`   the set of all complex numbers with float32 real and imaginary parts
 - `complex128`  the set of all complex numbers with float64 real and imaginary parts
 - `byte`        alias for uint8
-- `rune`        alias for int32 (represents a Unicode code point)
+- `rune`        alias for int32 (represents Unicode code point)
 
 ### Type assertion and type conversion
 
@@ -299,11 +301,12 @@ The way to define a specific type is:
 *type* **\<name\>** **\<underlying-type\>**
 
 Let's see an example:
+
 ```go
 package main
 
 import (
-	"fmt"
+  "fmt"
 )
 
 type Meters float64
@@ -339,7 +342,7 @@ fmt.Println("a == b (Meter == Miles)", a == b) // will not build
 
 ### Booleans [TODO]
 
-### String [...]
+### String
 
 What are the strings in Golang? Are ***immutable*** sequence of bytes. These are interpreted as UTF-8 encoded sequences
 of Unicode.
@@ -365,13 +368,14 @@ fmt.Println(s[2:5]) // -> llo
 {{< /alert >}}
 
 As a special sequence of characters you can use escape chars also:
-- \a  “alert” or bell 
-- \b backspace 
-- \f form feed 
-- \n newline 
-- \r carriage return 
-- \t tab 
-- \v vertical tab 
+
+- \a  “alert” or bell
+- \b backspace
+- \f form feed
+- \n newline
+- \r carriage return
+- \t tab
+- \v vertical tab
 - \' single quote (only in the rune literal '\'')
 You can include arbitrary bytes (only 1 byte) using also:
 - hexadecimal escape char \xYY
