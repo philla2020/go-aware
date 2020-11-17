@@ -293,7 +293,113 @@ func useCounter(){
 }
 ```
 `f` contains a value that is the value of the function counter(). The variable `i` is alive in memory because referenced by the anonymous function.
-If we invoke counter() again another `i` variable and anonymous func would be created. Invoking more time the anonymous increments the i variable 
-referenced by it.
+If we invoke counter() again another `i` variable and anonymous func would be created. Invoking more time the anonymous increments the i variable referenced by it.
 
-This shows how the function value can be not only pure code but have a value.
+This shows how the function value can be not only pure code but have a stated value.
+
+{{% alert title="Important" color="warning" %}}
+Remember that using anonymous function to be recursive, you need to declare them into a variable before using, example:
+{{% /alert %}}
+
+```golang
+func topoSort(m map[string][]string) []string {
+  var order []string
+  seen := make(map[string]bool)
+  var visitAll func(items []string)
+
+  visitAll = func(items []string) {
+    for _, item := range items {
+      if !seen[item] {
+        seen[item] = true
+        visitAll(m[item])
+        order = append(order, item)
+      }
+    }
+  }
+
+  var keys []string
+    for key := range m {
+    keys = append(keys, key)
+  }
+
+  sort.Strings(keys)
+  visitAll(keys)
+  sort.Strings(order)
+  return order
+}
+```
+
+as you can see from the code above `visitAll(keys)` calls the `visitAll` anonymous function defined above. Thanks to ***https://github.com/adonovan/gopl.io/blob/master/ch5/toposort/main.go*** for this awesome example. To avoid having a long coding space the other section of the code is omitted, you can find the rest on the repository [here](https://github.com/adonovan/gopl.io/blob/master/ch5/toposort/main.go).
+{{% alert title="Tip" color="info" %}}
+Remember also that the `visitAll` func only sees the variables defined before its declaration, therefore it doesn't see the `keys` slice.
+{{% /alert %}}
+
+### A common trap with the for loop
+
+When using the anonymous funcs you could encounter a trap, a sort of pitfall. Using anonymous func you know that you could have a state as
+a value, imagine to have this slice declared on top of your package:
+```
+var numbers = []int{1, 2, 4, 8, 16}
+```  
+then you write this simple function:
+```golang
+func counterNew() {
+	var funcs []func() int
+	for _, i := range numbers {
+		funcs = append(funcs, func() int {
+			i++
+			return i
+		})
+	}
+
+	for _, f := range funcs {
+		fmt.Println(f())
+	}
+}
+```
+in the above code we have:
+- a slice of funcs of `type () int`
+- as a value we add to the slice func that return the i for loop variable
+- range on the funcs slice to invoke the funcs
+
+**What do you guess is the output of the print?** Below the result:
+```
+17
+18
+19
+20
+21
+```
+Did you imagine?? I guess no...
+Conceptually it's the name behaviour seen before, anonymous function has the variable i internally and can increment it. The problem
+is that the variable is inside a for loop. The loop share the variable reference, therefore every anonymous func is pointing to the
+same value, the last of the for loop. So 16 + 1, + 2, + 3...
+
+To solve the problem you need a declared variable that store the `i` value:
+
+```golang
+func counterNew() {
+	var funcs []func() int
+	for _, i := range numbers {
+		m := i
+		funcs = append(funcs, func() int {
+			m++
+			return m
+		})
+	}
+
+	for _, f := range funcs {
+		fmt.Println(f())
+	}
+}
+```
+
+`m` variable save the value of `i` and the anonymous func value refers to it. Et voilà, the result is what you expect:
+
+```
+2
+3
+5
+9
+17
+```
