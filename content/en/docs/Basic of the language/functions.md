@@ -229,8 +229,71 @@ fmt.Println("result of f() is:", f(1, "10"))
 ```
 
 - the ***type*** of a function are both parameters and return values in an unique type
-- value of a function is the body
+- ***value*** of a function is the body
 - the ***ZERO value*** of a function type is nil
 - if assigned to a variable we can assigne a function with the same type (as point 1)
 
+Follow an example of a function that calls other function passed as parameter. We have this func that has the `f` parameter of type `func(par1 int, par2 string) int`:
 
+```golang
+func testWithFuncInput(f func(par1 int, par2 string) int){
+  for i:=0; i < 10; i++{
+    fmt.Printf("%d,",f(i, string(i)))
+  }
+  fmt.Println()
+}
+```
+
+here is a function of the same type:
+
+```golang
+func example(par1 int, par2 string) int {
+  return par1 * 2
+}
+```
+
+we can call as the func `testWithFuncInput` passing `example` func as argument. This is very flexible because we can define several functions of the same type
+each one with its own logic and change the behaviour of `testWithFuncInput` passing a different function to it.
+
+```golang
+// Example to pass as argument of a function a parameter that is another
+// function itself
+testWithFuncInput(example)
+```
+
+## Anonymous functions
+
+It is a function without a name that can be assigned within any expression. Using this technique is possible to write a
+closure.
+
+A closure is a function nested in another function that has a reference to one or more variable contained into the host function.
+By this way the reference to the variable is active also when the host function ends. This is important to show that the **function values**
+are not only code but can have a state.
+
+This is an example:
+
+```golang
+func counter() func() int{
+  var i int
+  return func() int {
+    i++
+    return i
+  }
+}
+```
+the above function has a variable i == 0. Then returns a func of type func() int. By this way the i variable is alive because is a value of the
+anonymous function return by counter. So, doing an assignment:
+
+```golang
+func useCounter(){
+  f := counter() // f is func() of type func() int
+  fmt.Printf("call anonymous func, value is %d\n", f()) // -> 1
+  fmt.Printf("call anonymous func, value is %d\n", f()) // -> 2
+  fmt.Printf("call anonymous func, value is %d\n", f()) // -> 3
+}
+```
+`f` contains a value that is the value of the function counter(). The variable `i` is alive in memory because referenced by the anonymous function.
+If we invoke counter() again another `i` variable and anonymous func would be created. Invoking more time the anonymous increments the i variable 
+referenced by it.
+
+This shows how the function value can be not only pure code but have a value.
