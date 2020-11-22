@@ -440,3 +440,38 @@ You can unpack also a slice with the opposite operation. For instance, if you ha
 ```golang
 fmt.Println(variadic([]string{"Hello", "from", "me!"}...))
 ```
+
+## Defer mechanism
+It is a statement reducing in a single call to a function that is **not** executed at the time of the call but deferred at the end of the
+function where `defer` is present. It is useful to ensure that a resource will be closed regardless if there is an error, a return statement, a panic.
+For example, opening a file:
+```golang
+func main() {
+	f, err := os.OpenFile("test.txt", os.O_RDONLY, 0666)
+  testError(err)
+  // some code here ...
+	defer f.Close()
+}
+```
+in the func above you ensure that the file will be closed when the `main` function finished, regardless the exit state.
+{{< alert title="Keypoints" color="success" >}}
+- write `defer` immediately after the correct assignment of the resource
+- in case of more `defer` present they are called in the inversed order (last defer is called for first and so on)
+{{< /alert >}}
+
+Here is another example taken from the ***Go Programming Language Book***:
+```golang
+func bigSlowOperation() {
+	defer trace("bigSlowOperation")() // don't forget the extra parentheses
+	// ...lots of work...
+	time.Sleep(3 * time.Second) // simulate slow operation by sleeping
+}
+
+func trace(msg string) func() {
+	start := time.Now()
+	log.Printf("enter %s", msg)
+	return func() { log.Printf("exit %s (%s)", msg, time.Since(start)) }
+}
+```
+the `defer` above is on the return function call. Pay attention: the extra parenthes means that defer is on the return function call.
+Go will wait to invoke this second function after the end of `bigSlowOperation()` call.
