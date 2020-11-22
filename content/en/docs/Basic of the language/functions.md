@@ -371,7 +371,7 @@ in the above code we have:
 21
 ```
 Did you imagine?? I guess no...
-Conceptually it's the name behaviour seen before, anonymous function has the variable i internally and can increment it. The problem
+Conceptually it's the name behaviour seen before, anonymous function has the variable `i` internally and can increment it. The problem
 is that the variable is inside a for loop. The loop share the variable reference, therefore every anonymous func is pointing to the
 same value, the last of the for loop. So 16 + 1, + 2, + 3...
 
@@ -402,4 +402,41 @@ func counterNew() {
 5
 9
 17
+```
+
+## What is a variadic function?
+It is a function that can be called with any number of arguments of that type.
+An example if the `fmt.Println` function defined as:
+
+```
+func Println(a ...interface{})
+```
+
+to declare a parameter with any number of args use the '...' before the type. In the example above the Println func accepts
+any number of any type (interface{}).
+Follow an example:
+```golang
+func variadic(elems ...string) string {
+	var res string
+	for _, s := range elems {
+		res += fmt.Sprintf("%s-", s)
+	}
+	return res[:len(res)-1]
+}
+
+fmt.Println(variadic("Hello", "from", "me!"))
+```
+calling the above func you get:
+```
+Hello-from-me!
+```
+Internal to the function the `elemes` variable is a slice of string. Changing the code as below you'll get the same result:
+```golang
+func variadic(elems ...string) string {
+	return strings.Join(elems, "-")
+}
+```
+You can unpack also a slice with the opposite operation. For instance, if you have a slice of string as argument you can pass directly to the function by this way (avoiding a cycle):
+```golang
+fmt.Println(variadic([]string{"Hello", "from", "me!"}...))
 ```
