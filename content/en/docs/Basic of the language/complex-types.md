@@ -373,7 +373,7 @@ func compare()  {
 
 ### Add a method to a structure
 
-To add a method you have to use a receiver that is a special way that Go passes at the method the value of the object related to the strut itself.
+To add a method to a structure you have to use a ***receiver***. A receiver is a special way that Go passes at the method the value of the object related to the strut itself.
 To create a method you have this special syntax:
 
 ```go
@@ -381,6 +381,7 @@ func (varName Type) Method()  {
 	...
 }
 ```
+the object is the first parameter, follow by the func name + args + return values.
 
 for example, if you want to add a method Go to the vehicle struct, type:
 
@@ -399,13 +400,61 @@ fmt.Println(v)
 v.Go()
 ```
 Under the hood, Go will take the v object and passes its instance to the Go() function, so inside the method you can use v object.
-**Remember** that Go will pass the value of the v object, therefore if you change it (for instance changing a value of a field) inside the method, the original object is still unchanged. If you need to do it (or your struct is big and you want to improve the memory usage) you can use a pointer instead:
+**Remember** that ***Go will pass the value*** of the v object, therefore if you change it (for instance changing a value of a field) inside the method, the original object is still unchanged. If you need to do it (or your struct is big and you want to improve the memory usage) you can use a pointer instead:
 ```go
 func (v *Vehicle) Go() {
   fmt.Println("Started!")
   // change velocity for example...
 }
 ```
+We can attach a method to any type (except pointer or interface) not only on structs. 
+When invoking a method of an object checks the receiver type parameter, it could be a pointer. Golang converts for us from normal type
+to a pointer in such cases, for example having this struct:
+```golang
+// Simple struct
+type VehicleNew struct {
+	brand      string
+	model      string
+	horsepower int
+	year       int
+}
+
+func (v *VehicleNew) Go() {
+	fmt.Println("Started!")
+}
+
+func (v VehicleNew) GoSlow() {
+	fmt.Println("Started!")
+}
+```
+you have two methods, one accepts a pointer as receiver parameter, the second accepts the T VehicleNew. Some cases to avoid confusion;
+- argument is a T and receiver is a *T:
+```
+vn := VehicleNew{
+  "Tesla", "TeslaXY", 125, 2020,
+}
+vn.Go() // Golang automatic converts to a pointer
+(&vn).Go() // explicit call using a pointer as a receiver argument
+```
+- argument is a *T and receiver is a *T:
+```
+vn2 := &VehicleNew{
+  "Tesla", "TeslaXY", 125, 2020,
+}
+vn2.Go() // receiver is a pointer, argument vn2 is a pointer
+```
+- argument is a *T and receiver is a T:
+```
+vn2 := &VehicleNew{
+  "Tesla", "TeslaXY", 125, 2020,
+}
+vn2.GoSlow() // argument is a pointer, Golang dereference the pointer automatically
+(*vn2).GoSlow() // explicit call dereferencing the pointer
+```
+{{% alert title="Important" %}}
+- usually when you create a type, if you use a parameter as a pointer receiver, all the methods have to be written in this way
+- usually the receiver name is the first letter of the type name (lowercase)  
+{{% /alert %}}
 
 ### Type composition
 
