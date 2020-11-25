@@ -346,7 +346,18 @@ fmt.Println(new(Vehicle))
 fmt.Printf("%#v\n",&Vehicle{})
 ```
 For the moment don't take care at the '&' character in the last row.
+You can also declare a struct without give it a particular name and instance it, take a look:
+```golang
+var color = struct {
+	rgb int
+	name string
+}{
+	100,
+	"red",
+}
 
+fmt.Println("color is", color.name)
+```
 ### Compare structs
 Remember that if all the fields in a struct are comparable, the structs are comparable.
 For example:
