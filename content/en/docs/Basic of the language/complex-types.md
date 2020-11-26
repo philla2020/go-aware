@@ -1,6 +1,7 @@
 ---
 title: "Complex Types"
 linkTitle: "Complex Types"
+weight: 1
 description: >
   This paragraph is to explain some complex types that you will use on a daily basis.
 ---
@@ -384,17 +385,17 @@ func compare()  {
 
 ### Add a method to a structure
 
-To add a method to a structure you have to use a ***receiver***. A receiver is a special way that Go passes at the method the value of the object related to the strut itself.
+To add a method to a structure you have to use a ***receiver***. A receiver is a special way in which Go passes at the method the object related to the strut itself.
 To create a method you have this special syntax:
 
 ```go
-func (varName Type) Method()  {
+func (object Type) Method()  {
 	...
 }
 ```
-the object is the first parameter, follow by the func name + args + return values.
+the object is the first parameter, follow by the `func name + args + return` values.
 
-for example, if you want to add a method Go to the vehicle struct, type:
+for example, if you want to add a method **`Go`** to the vehicle struct, type:
 
 ```go
 func (v Vehicle) Go() {
@@ -411,7 +412,7 @@ fmt.Println(v)
 v.Go()
 ```
 Under the hood, Go will take the v object and passes its instance to the Go() function, so inside the method you can use v object.
-**Remember** that ***Go will pass the value*** of the v object, therefore if you change it (for instance changing a value of a field) inside the method, the original object is still unchanged. If you need to do it (or your struct is big and you want to improve the memory usage) you can use a pointer instead:
+**Remember** that ***Go will copy the value*** of the v object, therefore if you change it (for instance changing a value of a field) inside the method, the original object is still unchanged. If you need to do it (or your struct is big and you want to improve the memory usage) you can use a pointer instead:
 ```go
 func (v *Vehicle) Go() {
   fmt.Println("Started!")
