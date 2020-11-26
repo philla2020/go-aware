@@ -194,7 +194,7 @@ where *i* is the index and *v* is the value. If you want to omit i or v pass the
 
 ### Delete an element
 How to delete an element from a slice?
-We take the position of the element to delete, move the last value into it and the slice the slice wiping out the last position:
+We take the position of the element to delete, move the last value into it and wipe out the last position from the slice:
 ```golang
 func deleteElement(pos int){
 	fmt.Println("\n---Delete element")
@@ -207,7 +207,7 @@ func deleteElement(pos int){
 	fmt.Printf("after deletion s slice is %v (len: %d, cap: %d)\n", s, len(s), cap(s))
 }
 ```
-In the github repo there is an example under the slices.go file that shows the slower way to delete an element maintaining the order.
+On the github repo [go-language](https://github.com/mas2020-golang/go-language/blob/main/slices/slices.go) you can find an example that shows the slower way to delete an element maintaining the order.
 
 ## Maps
 It is an **unordered collection** of key/value pairs. Syntax is map[K]V where K is the type of the K, V is the value. A value could be a simple type or a composite type, like other map or an array.
