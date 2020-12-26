@@ -1,7 +1,7 @@
 
 ---
 title: "Technical articles"
-linkTitle: "Go in Deep"
+linkTitle: "Articles"
 weight: 20
 ---
 
