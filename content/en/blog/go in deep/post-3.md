@@ -121,32 +121,32 @@ Some code examples to clarify better. We start creating a single time and then f
 
 ```golang
 func formatTime(){
-	fmt.Println("\n---Format time")
-	// date time
-	t1 := time.Date(2020, 03, 29, 16,18, 22, 918000000, time.UTC)
+  fmt.Println("\n---Format time")
+  // date time
+  t1 := time.Date(2020, 03, 29, 16,18, 22, 918000000, time.UTC)
 
-	// anonymous func to check a format with an expected result
-	do := func(name, layout, expected string) {
-		got := t1.Format(layout)
-		if expected != got {
-			fmt.Printf("error: for %q got %q; expected %q\n", layout, got, expected)
-			return
-		}
-		fmt.Printf("%-27s %q gives %q\n", name, layout, got)
-	}
+  // anonymous func to check a format with an expected result
+  do := func(name, layout, expected string) {
+    got := t1.Format(layout)
+    if expected != got {
+      fmt.Printf("error: for %q got %q; expected %q\n", layout, got, expected)
+      return
+    }
+    fmt.Printf("%-27s %q gives %q\n", name, layout, got)
+  }
 
-	do("MM-DD-YYYY", "01-02-2006", "03-29-2020")
-	do("YYYY-MM-DD", "2006-01-02", "2020-03-29")
-	do("YYYY-MM-DD HH:MM:SS", "2006-01-02 15:04:05", "2020-03-29 16:18:22")
-	do("YYYY-MM-DD H:MM:SS (am/pm)", "2006-01-02 3:04:05", "2020-03-29 4:18:22")
-	do("YYYY-MM-DD HH:MM:SS.milli", "2006-01-02 15:04:05.000", "2020-03-29 16:18:22.918")
-	do("YYYY-MM-DD HH:MM:SS.micro", "2006-01-02 15:04:05.000000", "2020-03-29 16:18:22.918000")
-	do("YYYY-MM-DD HH:MM:SS.nano", "2006-01-02 15:04:05.000000000", "2020-03-29 16:18:22.918000000")
-	do("Short numeric month", "2006-1-02", "2020-3-29")
-	do("Short textual month", "2006-Jan-02", "2020-Mar-29")
-	do("Long textual month", "2006-January-02", "2020-March-29")
-	do("Day of week", "2006 January Monday", "2020 March Sunday")
-	do("Day of week", "Mon of January 2006", "Sun of March 2020")
+  do("MM-DD-YYYY", "01-02-2006", "03-29-2020")
+  do("YYYY-MM-DD", "2006-01-02", "2020-03-29")
+  do("YYYY-MM-DD HH:MM:SS", "2006-01-02 15:04:05", "2020-03-29 16:18:22")
+  do("YYYY-MM-DD H:MM:SS (am/pm)", "2006-01-02 3:04:05", "2020-03-29 4:18:22")
+  do("YYYY-MM-DD HH:MM:SS.milli", "2006-01-02 15:04:05.000", "2020-03-29 16:18:22.918")
+  do("YYYY-MM-DD HH:MM:SS.micro", "2006-01-02 15:04:05.000000", "2020-03-29 16:18:22.918000")
+  do("YYYY-MM-DD HH:MM:SS.nano", "2006-01-02 15:04:05.000000000", "2020-03-29 16:18:22.918000000")
+  do("Short numeric month", "2006-1-02", "2020-3-29")
+  do("Short textual month", "2006-Jan-02", "2020-Mar-29")
+  do("Long textual month", "2006-January-02", "2020-March-29")
+  do("Day of week", "2006 January Monday", "2020 March Sunday")
+  do("Day of week", "Mon of January 2006", "Sun of March 2020")
 }
 ```
 
@@ -154,6 +154,7 @@ The `do` internal func passes the layout according to the Golang format and
 an expected result. As you can see we have several ways to represent a single date/time as a string.
 
 Output is:
+
 ```shell
 MM-DD-YYYY                  "01-02-2006" gives "03-29-2020"
 YYYY-MM-DD                  "2006-01-02" gives "2020-03-29"
@@ -168,7 +169,9 @@ Long textual month          "2006-January-02" gives "2020-March-29"
 Day of week                 "2006 January Monday" gives "2020 March Sunday"
 Day of week                 "Mon of January 2006" gives "Sun of March 2020"
 ```
+
 Golang has a set of predefined formats as constants, here the list:
+
 ```golang
 const (
     ANSIC       = "Mon Jan _2 15:04:05 2006"
@@ -189,6 +192,7 @@ const (
     StampNano  = "Jan _2 15:04:05.000000000"
 )
 ```
+
 Updated information can be found [here](https://golang.org/pkg/time/#pkg-constants]).
 
 ## Time Zone and Location
@@ -440,3 +444,57 @@ Output is:
 Unix time from time.Now() is 1609143092
 UnixNano time from time.Now() is 1609143092251696000
 ```
+
+## Get the elapsed time of a function
+
+We can decorate a function *"simply"* passing the function to execute as a ***parameter*** of another function.
+In our case it is useful to measure how long a specific function takes. Below the code for the decoration:
+
+```golang
+func timing(f func(p ...interface{}), args ...interface{})  (d time.Duration) {
+  start := time.Now()
+  f(args...) // our function to execute
+  end := time.Now()
+  return end.Sub(start)
+}
+```
+
+the `timing` function accept two parameters:
+
+- the ***func*** to execute that accepts any number of input parameters
+- the ***args*** to pass at the function to execute
+
+`p` and `args` are slices of the interface type (anything). The function:
+
+- gets the start time
+- executes the function passing interface args (... means unpack the []interface{} slice into single elements)
+- gets the end time
+- returns the ***Duration*** of the function to execute
+
+We can pass any func of the same type as an input of `timing`. Let's see an example, create a simple testing function:
+
+```golang
+func testTiming(i ...interface{}){
+  n, ok := i[0].(int)
+  if !ok {
+    panic("the first parameter must be an int...")
+  }
+  fmt.Println("executing testFunc...")
+  time.Sleep(time.Duration(n) * time.Second)
+}
+
+d := timing(testTiming, 1)
+fmt.Printf("elapsed time of testFunc was %v", d)
+```
+
+An example of output:
+
+```shell
+executing testFunc...
+elapsed time of testFunc was 1.002484924s
+```
+
+- `testTiming` has the same type -> `func (i ...interface{})` of the first parameter of the `timing` func
+- 1 is the argument that is passed to the `testTiming` func by the `timing`
+
+To have a generic decorator we needed to write our function with the `(i ...interface{})` as a parameter. By this way, we can use it with a generic bunch of functions to decorate.
