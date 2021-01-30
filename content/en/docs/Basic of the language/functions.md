@@ -1,6 +1,7 @@
 ---
 title: "Using Functions"
 linkTitle: "Using Functions"
+weight: 2
 description: >
   What they are and how to use them
 ---

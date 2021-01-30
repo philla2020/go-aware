@@ -1,6 +1,7 @@
 ---
 title: "Using Pointers"
 linkTitle: "Using Pointers"
+weight: 3
 description: >
   What they are and how to use them
 ---
