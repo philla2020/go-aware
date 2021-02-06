@@ -6,7 +6,14 @@ description: >
   This paragraph is to explain some complex types that you will use on a daily basis.
 ---
 
-Explanation of the page.
+## What is included in this section?
+The complex types threated here are:
+- arrays
+- slices
+- maps
+- struct
+
+On the right menu you can find a rapid link to these types to directly jump into a section you need a quick refresh.
 
 ## Arrays
 

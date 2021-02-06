@@ -1,7 +1,7 @@
 ---
 title: "Using Interfaces"
 linkTitle: "Using Interfaces"
-weight: 10
+weight: 4
 description: >
   What they are and how to use them
 ---

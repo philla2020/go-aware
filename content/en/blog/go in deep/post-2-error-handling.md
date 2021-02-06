@@ -4,6 +4,7 @@ title: "The Error handling"
 linkTitle: "The Error handling"
 description: >
   An article on how Go programs can manage Errors
+author: Andrea Genovesi ([@mas2020](https://github.com/mas2020))
 ---
 
 Errors in Go are non threated as you are used to in other languages. Errors in others languages uses Exception and not ordinary values as in Go. Using Exceptions sometimes lead to an undesiderable outcome: routines in error are reported in a difficult and log stack trace.

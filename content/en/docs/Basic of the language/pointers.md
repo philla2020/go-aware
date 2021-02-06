@@ -6,10 +6,6 @@ description: >
   What they are and how to use them
 ---
 
-{{% pageinfo %}}
-Work in progress...
-{{% /pageinfo %}}
-
 ### What is a pointer?
 
 A pointer is an address that references some area in memory. A pointer variable is a variable that stores that address.

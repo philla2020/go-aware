@@ -9,6 +9,7 @@ resources:
   title: "Image #:counter"
   params:
     byline: "Test"
+draft: true
 ---
 
 ## Including images

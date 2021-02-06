@@ -6,10 +6,6 @@ description: >
   What they are and how to use them
 ---
 
-{{% pageinfo %}}
-Work in progress...
-{{% /pageinfo %}}
-
 ## Interesting topics
 
 Before starting to explore the functions it is worth to mention some interesting concepts subject to misunderstanding.
