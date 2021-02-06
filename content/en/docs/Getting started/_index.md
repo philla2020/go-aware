@@ -9,7 +9,7 @@ description: >
 
 ## Prerequisites
 
-To use Go you need to install all the software and the use some IDE you prefer (e.g. **Visual Studio Code**, **Goland** or simply you favourite terminal).
+To use Go you need to install all the software and the use some IDE you prefer (e.g. **Visual Studio Code**, **Goland** or simply you favorite terminal).
 
 ## Installation
 
@@ -46,7 +46,7 @@ For example if you have Ubuntu installation you can change the file `$HOME/.prof
 
 ### Linux with a package manager
 
-The best option in this case is referring to the documentation of your favourite distro. For example, if you are on **Ubuntu** you can type:
+The best option in this case is referring to the documentation of your favorite distro. For example, if you are on **Ubuntu** you can type:
 ```
 $ sudo apt install golang-go
 ```
