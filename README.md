@@ -11,6 +11,7 @@ git submodule update --init --recursive
 
 sudo npm install -D --save autoprefixer
 sudo npm install -D --save postcss-cli
+sudo npm install -D postcss
 ```
 
 ## Update the theme
