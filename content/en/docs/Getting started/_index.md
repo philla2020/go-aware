@@ -9,16 +9,16 @@ description: >
 
 ## Prerequisites
 
-To use Go you need to install all the software and the use some IDE you prefer (e.g. **Visual Studio Code**, **Goland** or simply you favorite terminal).
+To use Golang you have to install the software needed and then use some IDE you prefer (e.g. **Visual Studio Code**, **Goland** or simply your favourite terminal).
 
 ## Installation
 
-The first place to go to get started with `Golang` is the official [site](https://golang.org/doc/install).
+To get started with `Golang` the first place is the official [site](https://golang.org/doc/install).
 
 ### Mac OSX
 
-The official site suggests to download the package but an alternative (and valid) way is using **`HomeBrew`**. If have not installed on your machine you can get from [here](https://brew.sh/index_it).
-Then to install `Go` you can type:
+The official site suggests downloading the package, but a valid alternative way is using **`HomeBrew`**. If you have not installed on your machine you can get it from [here](https://brew.sh/index_it).
+By this way, install `Go` is really straightforward, simply type:
 
 ```
 $ brew install go
@@ -27,7 +27,7 @@ $ brew install go
 ### Linux
 
 The suggestion is to directly download the last version of Golang and untar it into the local folder.
-{{< alert color="warning" >}}If you have a previous version **ensure to uninstall** it before proceeding.{{< /alert >}}
+{{< alert color="warning" >}}If you have a previous version **be sure to uninstall** it before proceeding.{{< /alert >}}
 
 * Download the archive and extract it into /usr/local:
 
@@ -41,12 +41,12 @@ $ tar -C /usr/local -xzf go<VERSION>.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 ```
 
-The file where to insert the above export instruction, depends from your system and shell.
+The file where to insert the above export instruction, depends on your system and shell.
 For example if you have Ubuntu installation you can change the file `$HOME/.profile`.
 
 ### Linux with a package manager
 
-The best option in this case is referring to the documentation of your favorite distro. For example, if you are on **Ubuntu** you can type:
+The best option is referring to the documentation of your favorite distro. For example, if you are on **Ubuntu** you can type:
 ```
 $ sudo apt install golang-go
 ```
@@ -57,7 +57,7 @@ snap install go
 
 ## Try it out!
 
-Regardless of the method you chose, to check that the installation is working, try this command:
+Regardless of the method you chose, to check if the installation is working, try this command:
 ```
 $ go version
 ```
