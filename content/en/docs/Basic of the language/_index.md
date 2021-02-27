@@ -56,13 +56,13 @@ all with the same package declaration. See how to use your own package later on 
 
 ### Packages, what they are and how to use
 
-Some key point to better understand packages:
-
+{{< alert title="Keypoints" color="success" >}}
 - a package is declared using the corresponding keyword
 - the source code of a package resides in one o more .go files, located all in the same folder
 - usually the name of the package is the name of the folder which is located
 - all the files of the same package can use functions and variables without qualifying them
 - outside the package to use variables or functions we need to point to the package (only for variable or function with the first capital letter)
+{{< /alert >}}
 
 Ok, try to create a new simple project with this structure:
 ```
@@ -331,8 +331,8 @@ func main() {
 ```
 
 {{< alert title="Tip" color="success" >}}
-A type conversion is possible if the two types have the same underlying value or are both pointers to the same object. In case you convert between
-different types Go could make a truncation of the value, or a copy of them (string => byte slice). For instance:
+A type conversion is possible if the two types have the same underlying value or are both pointers to the same object. 
+In case you convert between different types Go could make a truncation of the value, or a copy of them (string => byte slice). For instance:
 ```go
 var b Miles = Miles(a) * Miles(0.621371)
 var c int = int(b) // value will be 621
@@ -489,7 +489,7 @@ func decodeRunes()  {
 }
 ```
 DecodeRuneInString method will give the char and the size in bytes so that we can move to the next basing on the size of the previous one.
-Fortunately exists the range that decodes UTF-8 implicitly:
+Fortunately, exists the range that decodes UTF-8 implicitly:
 ```golang
 // decodes implicitly
 for i, r := range s{

@@ -7,34 +7,34 @@ description: >
 ---
 
 ## What is included in this section?
-The complex types threated here are:
+The complex types shown here are:
 - arrays
 - slices
 - maps
 - struct
 
-On the right menu you can find a rapid link to these types to directly jump into a section you need a quick refresh.
+On the right menu you can find a rapid link to directly jump into a section you need a quick refresh.
 
 ## Arrays
 
 Arrays are fixed collections of a declared type.
 
-Some key points to remember are:
-
-- are fixed and cannot resize
+{{< alert title="Key points" color="success" >}}
+- arrays are **fixed** and cannot be resized
 - the array elements can be modified
-- are pointed started from zero to the lenght minus one
+- are pointed started from zero to the length minus one
 - by default the elements of a new array are initialized to the ZERO values for that type 
-- we can use literals to initialize an array
+- you can use literals to initialize an array
 - it is possible to **compare only two arrays of the same type and the same length**
 - two arrays are equals if all the elements have the same values
+{{< /alert >}}
 
 {{% alert title="Important" color="warning" %}}
-Remember that every time you pass an array to a func Go is copying the array into another one, it is time and memory consuming.
-Also in this case you can use **pointers**.
+Remember that every time you pass an array to a func, Go is copying the array into another one, it is time and memory consuming.
+To avoid this you can use **pointers**.
 {{% /alert %}}
 
-This is an example that covers all the topics listed above (printValues is a function that print simply a value):
+This is an example that covers all the topics listed above (printValues is a function that prints a value):
 
 ```golang
 var a [5]string // declaration of an array of 5 elements (init at ZERO values)
@@ -71,28 +71,28 @@ fmt.Println("i3:", i3)
 ## Slices
 Slices are fixed collections of a declared type.
 
-{{< alert title="Keypoints" color="success" >}}
+{{< alert title="Key points" color="success" >}}
 - declaration is similar to the array without having to declare the length
-- it has three components a pointer, a length, a capacity
-- is a ligthweigth structure that gives access to the underlying structure that is an array
+- it has three components a pointer, a length and a capacity
+- is a lightweight structure that gives access to the underlying object that is an array
 - **pointer**: the first element reachable of the array (not necessarily the first)
 - the **length** is the number of slice elements (***len*** function gives it)
-- the **capacity** is the number of elements between the start of the slice and the end of the array (***cap*** function gives it)
+- the **capacity** is the number of elements between the start of the slice, and the end of the array (***cap*** function gives it)
 - multiple slices can refer to the same underlying array
-- you cannot use == operator to test if two slices have the same values, you need to do your own func
+- you cannot use == operator to test if two slices have the same values, you need to do it with your own func
 {{< /alert >}}
-Follow an awesome image taken from the book ***Go Programming Language*** that illustrates the len, cap and underlying array:
+Follow an awesome image taken from the book ***Go Programming Language*** that illustrates the len, cap and the underlying array:
 
 ![](/img/slices.png)
 
-The operator **x[i:z]** returns a new slice that goes from i (int index) to z -1 of a sequence z. What is z?
+The operator **x[i:z]** returns a new slice that goes from i (int index) to z -1 of a sequence z. What is `x`?
 - another slice
 - an array
 - a pointer to an array
 if i is not present it is 0, if z is not present, it assumes len(x)
 
 ### Init a slice
-Here are typed some ways to create a slice:
+Below there are some ways to create a slice:
 ```golang
 var s []int // nil slice
 var s1 = []int{} // empty slice with 0 elemes (not nil)
@@ -101,10 +101,10 @@ s3 := make([]int, 10, 20) // slice of 10 len and 20 cap with 10 elems set to int
 s4 := new([20]int)[:10] // same as s3
 fmt.Println(s, s1, s2, s3 ,s4)
 ```
-Behind the scene, make creates and underlying unnamed array variable and return a slice of it. The array is accessible only throghout
+Behind the scene, make creates and underlying unnamed array variable and return a slice of it. The array is accessible only throughout
 the slice.
 
-Follow other examples to build slices using [:] syntax:
+Below there are other examples to build slices using [:] syntax:
 ```golang
 months := []string{1: "January", 3: "March", "April", "May", "June", "July"}
 // an example of the slice operator that creates a new slice
@@ -129,7 +129,8 @@ example:
 fourMonths := firstMonths[:4]
 printValues(fourMonths)
 ```
-Slice is a ***reference type*** because it contains a pointer to an array, therefore passing a slice as an argument to a function permits to modify the underlying array. Remember that Go always copy the value but, in this case, it copies a pointer not an entire structure.
+Slice is a ***reference type*** because it contains a pointer to an array, therefore passing a slice as an argument to a function permits to modify 
+the underlying array. Remember that Go always copy the value but, in this case, it copies a pointer not an entire object.
 To show this take a look at the following reverse example, as you can notice the argument passed to the function is the original slice
 that after execution is reversed:
 
@@ -146,7 +147,7 @@ func reverse(a []int){
 	}
 }
 ```
-in the above example remember the multiple assingment separated by comma, *i,j := 0, len(a) - 1*, where i is 0 and j is 5.
+in the above example remember the multiple assignment separated by comma, *i,j := 0, len(a) - 1*, where i is 0 and j is 5.
 
 The **ZERO value** of a slice type is nil:
 ```golang
@@ -187,7 +188,7 @@ fmt.Println(i) // len == 6, cap == 10 => [0 0 0 0 0 100]
 ```
 The second parameter of the append function accepts '...Type'. The ellipsis '...' means that it accepts any number of arguments.
 {{< alert color="warning" title="ATTENTION" >}}
-Every time a slice changes its ***cap*** means new allocation and copy, therefore pay attention to the cap and len it's a good
+Every time a slice changes its ***cap*** means a new allocation and copy, therefore pay attention to the cap and len it's a good
 way to be more efficient.
 {{< /alert >}}
 
@@ -215,10 +216,12 @@ func deleteElement(pos int){
 	fmt.Printf("after deletion s slice is %v (len: %d, cap: %d)\n", s, len(s), cap(s))
 }
 ```
-On the github repo [go-language](https://github.com/mas2020-golang/go-language/blob/main/slices/slices.go) you can find an example that shows the slower way to delete an element maintaining the order.
+On the github repo [go-language](https://github.com/mas2020-golang/go-language/blob/main/slices/slices.go) you can find an example that shows the
+slower way to delete an element maintaining the order.
 
 ## Maps
-It is an **unordered collection** of key/value pairs. Syntax is map[K]V where K is the type of the K, V is the value. A value could be a simple type or a composite type, like other map or an array.
+It is an **unordered collection** of key/value pairs. Syntax is map[K]V where K is the type of the K, and V is the value. 
+A value could be a simple type or a composite type, like other map or an array.
 
 {{< alert title="Keypoints" color="success" >}}
 - ***ZERO value*** for a Map is `nil` (Map address is a reference to an HASH table)
@@ -226,7 +229,7 @@ It is an **unordered collection** of key/value pairs. Syntax is map[K]V where K 
 - in Go a map is a reference to an HASH table
 - all the keys of a Map are of the same type; all the values are of the same type. Keys and Values do not necessarily be of the same type
 - cannot take an address from a map element (e.g. &test["xyz"])
-- a map lookup using a key that doesn't exist will not give an error, returns the ZERO value for the value type
+- a map lookup using a key that doesn't exist will not give an error, returns the ZERO value for the value **_type_**
 - map ***cannot be compared*** each other (as slices), the only legal comparison is with `nil`
 {{< /alert >}}
 
@@ -235,7 +238,7 @@ Elements inside a map are not ordered, suppose you have a map with keys string a
 func sortMap(ages map[string]int)  {
 	var names = make([]string, 0, len(ages)) // slice for the names
 	// append all the names to the slice in a unordered way
-	// we omit the second value in the for loop using only the key of ages and hot the value
+	// we omit the second value in the for loop using only the key of ages and not the value
 	for key := range ages{
 		names = append(names, key)
 	}
@@ -257,16 +260,16 @@ var testNil map[string]int // ZERO value is nil
 names := make(map[string]int)
 fmt.Printf("names == nil: %v, content is: %v\n", names == nil, names) // => false
 
-  // maps from literals
+// another way to create an empty map
+ages2 := map[string]int{}
+fmt.Println("ages2 == nil:", ages2 == nil) // => false
+
+// maps from literals
 ages := map[string]int{
   "ag": 43,
   "sm": 29,
   "mg": 0,
 }
-
-  // another way to create an empty map
-ages2 := map[string]int{}
-fmt.Println("ages2 == nil:", ages2 == nil) // => false
 ```
 
 to test if a **key esists** you can type:
@@ -275,8 +278,10 @@ to test if a **key esists** you can type:
 age, ok := names["test"]
 fmt.Printf("names test exists: %v and its value is %v", ok, age)
 ```
-this code will save in age the value of the key 'test' if a key exists, else it will store the ZERO value of the element type. `ok` will be true in case a key exists, otherwise false.
-Simply testing a key, without using the previous code, in case the key doesn't exist, returns the ZERO value of the element type, e.g. in case of int 0. Sometimes could be useful, sometimes no, in that case use the check form instead.
+this code will save in `age` the value of the key 'test' if a key exists, else it will store the **ZERO** value of the element type. 
+`ok` will be true in case a key exists, otherwise false.
+Simply testing a key, without using the previous code, in case the key doesn't exist, returns the **ZERO** value of the element type, e.g. in case of int 0.
+Sometimes could be useful, sometimes no, in that case use the check form instead.
 
 ### Add new element
 To add elements you can use a not existing key as shown below:
@@ -297,7 +302,7 @@ func deleteElements(m map[string]int) {
 	fmt.Printf("values of m are %v\n", m)
 }
 ```
-in case we delete an element that doesn't exist no error will thrown.
+in case we delete an element that doesn't exist, no error will be thrown.
 
 ## Struct
 
@@ -426,7 +431,7 @@ func (v *Vehicle) Go() {
   // change velocity for example...
 }
 ```
-We can attach a method to any type (except pointer or interface) not only on structs. 
+We can attach a method to any type (except a pointer or an interface) not only on structs. 
 When invoking a method of an object checks the receiver type parameter, it could be a pointer. Golang converts for us from normal type
 to a pointer in such cases, for example having this struct:
 ```golang
@@ -446,7 +451,7 @@ func (v VehicleNew) GoSlow() {
 	fmt.Println("Started!")
 }
 ```
-you have two methods, one accepts a pointer as receiver parameter, the second accepts the T VehicleNew. Some cases to avoid confusion;
+above we have two methods, one accepts a pointer as receiver parameter, the second accepts the T VehicleNew. Some cases to avoid mistakes:
 - argument is a T and receiver is a *T:
 ```
 vn := VehicleNew{
@@ -470,9 +475,9 @@ vn2 := &VehicleNew{
 vn2.GoSlow() // argument is a pointer, Golang dereference the pointer automatically
 (*vn2).GoSlow() // explicit call dereferencing the pointer
 ```
-{{% alert title="Important" %}}
-- usually when you create a type, if you use a parameter as a pointer receiver, all the methods have to be written in this way
-- usually the receiver name is the first letter of the type name (lowercase)  
+{{% alert color="warning" title="Important" %}}
+- usually when you create a type, if you use a pointer as a parameter receiver, all the methods have to be written in this way
+- usually the receiver name is the first letter of the type name (lowercase)
 {{% /alert %}}
 
 ### Type composition
@@ -499,7 +504,8 @@ type SpecificType struct {
 
 ```
 
-As you can see the first property of the SpecificType struct is another Structure and we not specify the property name. By this way you can init the SpecificType using the dot notation as:
+As you can see the first property of the SpecificType struct is another Structure, and we not specify the property name.
+By this way you can init the SpecificType using the dot notation as:
 
 ```go
 var st SpecificType
@@ -531,7 +537,9 @@ st1 := SpecificType{
 ```
 
 {{% alert title="Note" color="info" %}}
-If you define a method on a Struct and there is a composition, the method itself is available on the struct that includes another struct. **Remember** that this is valid only for the implicit composition as seen above. Instead, if you assign the structure type to a field, for instance:
+If you define a method on a Struct and there is a composition, the method itself is available on the struct that 
+includes another struct. **Remember** that this is valid only for the implicit composition as seen above. Instead, if 
+you assign the structure type to a field, for instance:
 
 ```go
 type Job struct {
@@ -549,7 +557,7 @@ j.log.info()
 
 {{% /alert %}}
 
-{{% alert title="Tip" %}}
+{{% alert title="Tip" color="success" %}}
 It is better to have a pointer in a composition for performance reasons. Go “always” passes the argument by copying values, using a pointer only the reference is passed. For instance:
 
 ```go
@@ -569,13 +577,13 @@ st1 := SpecificType{
 "Cat of spec type",
 }
 ```
-For major information related to the use of Pointers take a look [here](../pointers/)
+For major information related to the use of Pointers take a look [here](../pointers/).
 {{% /alert %}}
 
 
 
 ## Go Template
-With Go we can use template system: it is a way to substitute at a string some value injected by a template `action`.
+With Golang, we can use template system: it is a way to substitute at a string some value injected by a template `action`.
 An `action` is a particular expression included in double brackets: `{{ ... }}`.
 With an expression we can:
 - print values, 
@@ -648,5 +656,5 @@ Age: 2018-02-01 00:00:00 +0000 UTC
 -------------------------------------
 ```
 That's it for the basics.
-Major information could be find in the official documentation related the text/template pkg [here](https://golang.org/pkg/text/template/).
-A blog post is coming soon too!!
+Major information could be find in the official documentation related to the text/template pkg [here](https://golang.org/pkg/text/template/).
+A blog post is coming soon!!

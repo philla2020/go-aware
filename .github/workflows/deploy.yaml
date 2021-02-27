@@ -3,8 +3,7 @@
 # checkout branch if a new tag is added
 # build site with hugo
 # copy site into a /tmp folder on the server
-# targz of the existing site and move into a backup folder
-# copy new site from /tmp to ngnix default location
+# copy new site from /tmp to nginx default location
 on:
   push:
     # trigger on new tag pushed
