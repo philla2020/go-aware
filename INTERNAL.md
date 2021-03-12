@@ -26,7 +26,7 @@ git submodule update --init --recursive
 
 To test run:
 ```shell script
-hugo server
+hugo server -p 8080
 ```
 
 To build the site type:
