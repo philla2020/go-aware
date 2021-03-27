@@ -2,6 +2,12 @@
 
 This content shows how to install and deploy the site.
 
+## Sections naming
+A new development must correspond to a new feature branch name as _feature/section/topic-argument_. Where:
+- _section_: could be basic, advanced, start
+- _topic_: identifies the area into the section and corresponds to a new md file
+- _argument_: a specific paragraph internal to a section (could be empty in case of starting of a new topic)
+
 ## Installation
 To install the theme do the following:
 

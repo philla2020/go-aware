@@ -6,6 +6,7 @@ weight: 20
 menu:
   main:
     weight: 20
+    pre: <i class='fas fa-book'></i>
 ---
 
 This guide reports some best practices and how to for Golang. You can take a look at all the examples reported in this guide here:

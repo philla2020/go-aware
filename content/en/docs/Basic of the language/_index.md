@@ -58,10 +58,11 @@ all with the same package declaration. See how to use your own package later on 
 
 {{< alert title="Keypoints" color="success" >}}
 - a package is declared using the corresponding keyword
-- the source code of a package resides in one o more .go files, located all in the same folder
+- the source code of a package resides in one o more .go files located in the same folder
 - usually the name of the package is the name of the folder which is located
 - all the files of the same package can use functions and variables without qualifying them
-- outside the package to use variables or functions we need to point to the package (only for variable or function with the first capital letter)
+- outside the package to use variables or functions we need to point to the package
+- only the variables or functions with the first capital letter are exposed outside the package they belong
 {{< /alert >}}
 
 Ok, try to create a new simple project with this structure:
@@ -137,7 +138,7 @@ Using the *var* keyword with this syntax:
 **var** name ***type*** = ***value*** ==> type and value can be omitted but not both, it means that:
 - if you omit type the type of the variable is set by the value
 - if you omit the value the variable is initialized with the ***ZERO*** value that is:
-  - 0 for numbers, false for booleans, "" for string, and **nil** for interfaces and reference types (slice, pointer, map, channel, function). Therefore, in Go there is no such thing as uninitialized variables.
+  - **0** for numbers, **false** for booleans, **""** for string, and **nil** for interfaces and reference types (slice, pointer, map, channel, function). Therefore, in Go there is no such thing as uninitialized variables.
 
 Here some basic usage:
 ```go
@@ -203,7 +204,7 @@ i += 5
 i = i + 5
 ```
 
-Another particular form of assignment is the ***Tuple assignment***. This assignemnt is useful to swap the values of two variables:
+Another particular form of assignment is the ***Tuple assignment***. This assignment is useful to swap the values of two variables:
 ```
 a, b = b, a
 ```
