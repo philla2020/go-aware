@@ -6,8 +6,10 @@ description: >
   What they are and how to use them
 ---
 
-## What is an interface? [...]
-> An interface is a contract to ensure that a type has implemented the method define in the reference interface. Remember that in Golang the interfaces are implemented implicitly, so you do not declare or change the type, simply you satisfied or not.
+## What is an interface?
+> An interface is a contract to ensure that a type has implemented the method defined in the reference interface. 
+> Remember that in Golang the interfaces are implemented implicitly, so you do not declare or change the type, 
+> simply you satisfied or not.
 
 All the types we have seen so far are concrete types. Interfaces are **abstract type** instead: there is not an internal implementation only a definition of methods.
 
@@ -18,7 +20,7 @@ type Writer interface {
 }
 ```
 as you notice the interface is composed by a type named `interface` and one or more methods that define the contract of this type. If another type has an implementation
-for all the methods contained in an interface type, it implicity adopts (or simply implements it). Let's see a complete example: below you can see a type named `MyType` that implements the
+for all the methods contained in an interface type, it implicitly adopts (or simply implements it). Let's see a complete example: below you can see a type named `MyType` that implements the
 interface `io.Writer`.
 ```golang
 import (

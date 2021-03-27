@@ -35,6 +35,7 @@ jobs:
           npm install -D --save autoprefixer
           npm install -D --save postcss-cli
           npm install -D postcss
+          export HUGO_ENV="production"
           hugo
 
       - name: copy file into the droplet
